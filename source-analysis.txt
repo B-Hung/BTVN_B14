@@ -1,0 +1,12 @@
+tên source: E-COMMERCEWEBSITE-main
+công nghệ: Java Spring Boot (sử dụng công cụ quản lý thư viện Maven)
+file chạy chính: File có đuôi .java chứa hàm main() để khởi chạy (ví dụ: AsmApplication.java trong thư mục ASM/src/main/java/com/poly/asm).
+
+port ứng dụng: 8080 (Do file application.properties không khai báo server.port, ứng dụng sẽ chạy ở port mặc định của Spring Boot).
+
+app cần gì để chạy:
+1. Môi trường chạy (Runtime): Java Development Kit phiên bản 21 (JDK 21).
+2. Hệ quản trị cơ sở dữ liệu: Microsoft SQL Server (sử dụng driver: com.microsoft.sqlserver.jdbc.SQLServerDriver).
+3. Tên Database cần nạp: LENUP (Được cấu hình ở dòng databaseName=LENUP, lấy dữ liệu từ file LENUP.sql).
+
+

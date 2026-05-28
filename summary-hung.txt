@@ -1,0 +1,31 @@
+Họ tên:  Nguyễn Bá Hùng
+Hostname server: cs-linux-20260504052434314
+Tên source code: E-COMMERCEWEBSITE-main
+Công nghệ của source: Java (Maven)
+Tên image đã build: hung-java-app (app) và  mcr.microsoft.com/mssql/server:2022-latest (db)
+Tên service trong docker-compose: app (cho ứng dụng) và db (cho cơ sở dữ liệu mssql)
+Port host: 8089 (cho app) và 1433 (cho db)
+Port container: 8888 (cho app) và 1433 (cho db)
+
+1. Em đã dùng Dockerfile như thế nào?
+Sử dụng một Dockerfile để đóng gói mã nguồn Java, Dockerfile này sử dụng  image phù hợp cho Java (ví dụ: maven hoặc openjdk), em thực hiện copy mã nguồn từ thư mục E-COMMERCEWEBSI.
+
+2. Em đã dùng Docker Compose như thế nào?
+Em viết file docker-compose.yml để quản lý đồng thời 2 dịch vụ (services) là app và db
+Service app: Em build từ Dockerfile cục bộ, đặt tên image là hung-java-app, và cấu hình map cổng từ 8089 (host) sang 8888 (container)
+Service db: Sử dụng image  mcr.microsoft.com/mssql/server:2022-latest, thiết lập các biến môi trường cấu hình mật khẩu SA và map cổng 1433:1433.
+
+3. Nếu hệ thống chưa chạy được ngay từ đầu, lỗi nằm ở đâu?
+Lỗi kết nối DB: Ứng dụng app khởi động trước và cố gắng kết nối đến db trong khi SQL Server chưa kịp sẵn sàng hoàn toàn để nhận kết nối.
+
+4. 5 lỗi kỹ thuật em có thể gặp khi Docker hóa source code này là gì?
+Lỗi xung đột cổng (Port conflict): Cổng 8080 hoặc 1433 trên máy host đã bị chiếm dụng bởi một ứng dụng khác trước đó.
+Lỗi phân quyền file: Docker không có quyền đọc/ghi dữ liệu vào các thư mục mã nguồn hoặc thư mục lưu trữ DB trên host
+Lỗi thiếu dependencies khi build: Quá trình build Maven bị lỗi do thiếu thư viện hoặc không tải được thư viện từ Internet vào trong container
+Lỗi sai phiên bản Java : Phiên bản Java dùng để chạy ứng dụng trong Dockerfile khác với phiên bản mã nguồn yêu cầu
+Lỗi thiếu biến môi trường: Quên cấu hình biến ACCEPT_EULA=Y hoặc MSSQL_SA_PASSWORD khiến container SQL Server tự động tắt 
+
+5. Nếu mở rộng tiếp, em sẽ thêm database / nginx / env / volume ra sao?
+Nginx: Thêm một service nginx đóng vai trò Reverse Proxy đứng ở phía trước để đón nhận các request ở cổng 80/443, sau đó điều hướng vào cổng 8089 của dịch vụ app
+Env: Tách toàn bộ các thông tin nhạy cảm (mật khẩu DB, port, cấu hình app) ra một file riêng tên là .env để bảo mật và dễ quản lý, thay vì viết trực tiếp vào file compose
+Volume: Cấu hình Volume cho service db để lưu trữ dữ liệu của SQL Server, đảm bảo dữ liệu không bị mất khi container bị xóa 
